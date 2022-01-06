@@ -10,6 +10,10 @@ let
   } // extra)).${wine};
 in
 {
+  dxvk-installer = final.callPackage ./dxvk/installer.nix { };
+  dxvk-x64 = prev.callPackage ./dxvk { };
+  dxvk-x86 = prev.callPackage ./dxvk { x64 = false; };
+
   osu-stable = prev.callPackage ./osu-stable {
     wine = final.wine-osu;
     inherit (final) winestreamproxy;
