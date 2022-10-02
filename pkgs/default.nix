@@ -30,6 +30,8 @@
 
     wine-ge = wineBuilder "wine-ge" "full" {};
 
+    wine-ge-lol = wineBuilder "wine-ge-lol" "full" {};
+
     wine-osu = wineBuilder "wine-osu" "base" {};
 
     wine-tkg = wineBuilder "wine-tkg" "full" {};

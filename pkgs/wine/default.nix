@@ -69,6 +69,39 @@ in {
         };
       });
 
+  wine-ge-lol = let
+    pname = pnameGen "wine-ge-lol";
+  in
+    (callPackage "${inputs.nixpkgs}/pkgs/applications/emulators/wine/base.nix" (defaults
+      // {
+        inherit pname;
+        version = "7.0";
+        src = fetchFromGitHub {
+          owner = "GloriousEggroll";
+          repo = "wine-ge-custom";
+          rev = "7.0-GE-5-LoL";
+          hash = "sha256-2NGEVeLhtwDfyWIaPljWd4Doh58KLeGdMsv0Es4wKS4=";
+          fetchSubmodules = true;
+        };
+      })).overrideDerivation (old: {
+        prePatch = ''
+          shopt -s extglob
+          rm -rfv !("wine"|"wine-staging"|"patches")
+
+          mv wine/* .
+          patchShebangs tools
+
+          mv wine-staging/patches/* patches/
+          chmod -R +w patches
+          rm -rf wine-staging
+
+          cd patches
+          patchShebangs gitapply.sh
+          ./patchinstall.sh DESTDIR="$PWD/.." --all ${lib.concatMapStringsSep " " (ps: "-W ${ps}") []}
+          cd ..
+        '';
+      });
+
   wine-tkg = let
     pname = pnameGen "wine-tkg";
   in
@@ -112,6 +145,7 @@ in {
         chmod +w patches
         cd patches
         patchShebangs gitapply.sh
+        exit 1
         ./patchinstall.sh DESTDIR="$PWD/.." --all ${lib.concatMapStringsSep " " (ps: "-W ${ps}") []}
         cd ..
       '';
