@@ -62,37 +62,17 @@ in {
       src = pins.wine-tkg;
     });
 
-  wine-osu = let
-    pname = pnameGen "wine-osu";
-    version = "7.0";
-    staging = fetchFromGitHub {
-      owner = "wine-staging";
-      repo = "wine-staging";
-      rev = "v${version}";
-      sha256 = "sha256-2gBfsutKG0ok2ISnnAUhJit7H2TLPDpuP5gvfMVE44o=";
-    };
-  in
-    (callPackage "${nixpkgs-wine}/pkgs/applications/emulators/wine/base.nix" (defaults
-      // rec {
-        inherit version pname;
-        src = fetchFromGitHub {
-          owner = "wine-mirror";
-          repo = "wine";
-          rev = "wine-${version}";
-          sha256 = "sha256-uDdjgibNGe8m1EEL7LGIkuFd1UUAFM21OgJpbfiVPJs=";
-        };
-        patches = ["${nixpkgs-wine}/pkgs/applications/emulators/wine/cert-path.patch"] ++ self.lib.mkPatches ./patches;
-      }))
-    .overrideDerivation (old: {
-      nativeBuildInputs = with pkgs; [autoconf perl hexdump] ++ old.nativeBuildInputs;
-      prePatch = ''
-        patchShebangs tools
-        cp -r ${staging}/patches .
-        chmod +w patches
-        cd patches
-        patchShebangs gitapply.sh
-        ./patchinstall.sh DESTDIR="$PWD/.." --all ${lib.concatMapStringsSep " " (ps: "-W ${ps}") []}
-        cd ..
-      '';
+  wine-osu = callPackage "${nixpkgs-wine}/pkgs/applications/emulators/wine/base.nix" (lib.recursiveUpdate defaults
+    {
+      pname = pnameGen "wine-osu";
+      version = "8.16";
+      src = fetchFromGitHub {
+        owner = "NelloKudo";
+        repo = "winello-wine";
+        rev = "793c04b2f73898944959c4bccd3597cc23753ae3";
+        sha256 = "sha256-aPYFfjVU7Rv9VkAJ+sMr0Zl7BicB9GUotyO/A5ZhsnM=";
+      };
+      patches = ["${nixpkgs-wine}/pkgs/applications/emulators/wine/cert-path.patch"];
+      supportFlags.waylandSupport = true;
     });
 }
