@@ -62,8 +62,8 @@
 
       osu-stable = pkgs.callPackage ./osu-stable {
         inherit (config.packages) osu-mime proton-osu-bin umu;
-        wine = config.packages.wine-osu;
-        wine-discord-ipc-bridge = config.packages.wine-discord-ipc-bridge.override {wine = config.packages.wine-osu;};
+        wine = config.packages.wine-winello;
+        wine-discord-ipc-bridge = config.packages.wine-discord-ipc-bridge.override {wine = config.packages.wine-winello;};
       };
 
       proton-ge = self.lib.mkDeprecated "warn" pkgs.emptyFile {
@@ -117,7 +117,9 @@
 
       wine-ge = wineBuilder "wine-ge" "full" {};
 
-      wine-osu = wineBuilder "wine-osu" "base" {};
+      wine-winello = wineBuilder "wine-winello" "base" {};
+
+      wine-osu = inputs.nixpkgs.lib.warn "wine-osu was deprecated in favor of wine-winello" config.packages.wine-winello;
 
       wine-tkg = wineBuilder "wine-tkg" "full" {};
 

@@ -62,15 +62,15 @@ in {
       src = pins.wine-tkg;
     });
 
-  wine-osu = callPackage "${nixpkgs-wine}/pkgs/applications/emulators/wine/base.nix" (lib.recursiveUpdate defaults
+  wine-winello = callPackage "${nixpkgs-wine}/pkgs/applications/emulators/wine/base.nix" (lib.recursiveUpdate defaults
     {
-      pname = pnameGen "wine-osu";
+      pname = pnameGen "wine-winello";
       version = "8.16";
       src = fetchFromGitHub {
         owner = "NelloKudo";
         repo = "winello-wine";
-        rev = "793c04b2f73898944959c4bccd3597cc23753ae3";
-        sha256 = "sha256-aPYFfjVU7Rv9VkAJ+sMr0Zl7BicB9GUotyO/A5ZhsnM=";
+        rev = "f927a83c7063912b4fc0acc3357bfc1492c54da0";
+        sha256 = "sha256-j+0JIy/zNRe6W3FSQu3ycyYwodXAcrRQDRZxZ81BLac=";
       };
       patches = ["${nixpkgs-wine}/pkgs/applications/emulators/wine/cert-path.patch"];
       supportFlags.waylandSupport = true;
